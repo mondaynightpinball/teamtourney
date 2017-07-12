@@ -7,7 +7,7 @@
     "test": "DEBUG='mnp*' mocha",
     "testgame": "DEBUG='mnp*' mocha test/game-route-test.js",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "start": "DEBUG='mnp*' node server.js",
+    "start": "DEBUG='mnp*' node start.js",
     "lint": "eslint server.js test/**/*.js route/**/*.js model/**/*.js lib/**/*.js"
   },
   "keywords": [],
