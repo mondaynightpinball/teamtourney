@@ -7,12 +7,7 @@ const mongoose = require('mongoose');
 const Promise = require('bluebird');
 mongoose.Promise = Promise;
 
-// const Machine = require('../model/machine.js');
-
 const server = require('../server.js');
-
-// Server now has start/stop methods.
-// const serverToggle = require('./lib/server-toggle.js');
 
 const url = `http://localhost:${process.env.PORT}`;
 
@@ -43,7 +38,6 @@ function mockUsers(fieldnames) {
 }
 
 describe('Team Routes', function() {
-  // before( done => serverToggle.start(server, done));
   before( done => {
     server.start().then( () => done());
   });
