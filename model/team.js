@@ -13,9 +13,9 @@ const teamSchema = Schema({
   //      in the context of a given league.
   code: { type: String, required: true, unique: true },
   venueId: { type: ObjectId, ref: 'venue' },
-  captain: { type: ObjectId, ref: 'player' },
-  // coCaptain: { type: ObjectId, ref: 'player' }, // Team tourney only needs 1 captain.
-  roster: [{ type: ObjectId, ref: 'player' }]
+  captain: { type: ObjectId },
+  // coCaptain: { type: ObjectId }, // Team tourney only needs 1 captain.
+  roster: [{ type: ObjectId }]
 });
 
 teamSchema.methods.addPlayer = function(player) {
