@@ -13,6 +13,9 @@ const router = module.exports = new Router();
 router.post('/api/signup', jsonParser, function(req, res, next) {
   debug('POST /api/signup');
 
+  // NOTE: While it is nice to let mongoose do our validation, there
+  //       were some problems getting it to do what I expected it to.
+  // TODO: Maybe revisit having mongoose validate req.body on save().
   if(!req.body ||
     !req.body.username ||
     !req.body.email ||
