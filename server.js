@@ -24,7 +24,6 @@ require('fs').readdirSync('./route').forEach( route => {
 let server = null;
 
 module.exports = {
-  // TODO: Dang, maybe the promise version is not as nice.
   start: () => {
     if(server) return Promise.resolve();
     debug('MONGODB_URI:', process.env.MONGODB_URI);
