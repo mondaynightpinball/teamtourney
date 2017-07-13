@@ -21,13 +21,14 @@ require('fs').readdirSync('./route').forEach( route => {
   app.use(require(`./route/${route}`));
 });
 
-let running = false;
+// let running = false; // We can check server === null instead.
+let server = null;
 
 module.exports = {
   // TODO: Dang, maybe the promise version is not as nice.
   // start: (done) => {
   start: () => {
-    if(running) return Promise.resolve();
+    if(server) return Promise.resolve();
     debug('MONGODB_URI:', process.env.MONGODB_URI);
     return new Promise( (resolve, reject) => {
       mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true })
@@ -36,9 +37,10 @@ module.exports = {
         // app.listen(PORT, () => debug('Server Up'));
         return app.listen(PORT);
       })
-      .then( () => {
+      .then( _server => {
         debug('Server Up');
-        running = true;
+        server = _server;
+        // running = true;
         return resolve();
       })
       .catch( err => {
@@ -48,16 +50,17 @@ module.exports = {
     });
   },
   stop: () => {
-    if(!running) return Promise.resolve();
+    if(!server) return Promise.resolve();
     debug('STOPPING...');
     return new Promise( (resolve, reject) => {
-      app.close( err => {
+      server.close( err => {
         if(err) return reject(err);
         debug('Server down, closing mongoose');
         mongoose.connection.close()
         .then( () => {
           debug('MONGO closed');
-          running = false;
+          server = null;
+          // running = false;
           return resolve();
         }).catch(reject);
       });
