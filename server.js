@@ -21,10 +21,13 @@ require('fs').readdirSync('./route').forEach( route => {
   app.use(require(`./route/${route}`));
 });
 
+let running = false;
+
 module.exports = {
   // TODO: Dang, maybe the promise version is not as nice.
   // start: (done) => {
   start: () => {
+    if(running) return Promise.resolve();
     debug('MONGODB_URI:', process.env.MONGODB_URI);
     return new Promise( (resolve, reject) => {
       mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true })
@@ -35,6 +38,7 @@ module.exports = {
       })
       .then( () => {
         debug('Server Up');
+        running = true;
         return resolve();
       })
       .catch( err => {
@@ -44,6 +48,7 @@ module.exports = {
     });
   },
   stop: () => {
+    if(!running) return Promise.resolve();
     debug('STOPPING...');
     return new Promise( (resolve, reject) => {
       app.close( err => {
@@ -52,6 +57,7 @@ module.exports = {
         mongoose.connection.close()
         .then( () => {
           debug('MONGO closed');
+          running = false;
           return resolve();
         }).catch(reject);
       });
