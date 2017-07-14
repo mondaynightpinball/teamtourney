@@ -13,7 +13,8 @@ const tourneySchema = Schema({
   name: { type: String }, // TODO Create semi-random default
   teams: [{ type: ObjectId, ref: 'team' }],
   rounds: [{ type: ObjectId, ref: 'round' }],
-  venue: { type: ObjectId, ref: 'venue' }
+  venue: { type: ObjectId, ref: 'venue' },
+  owner: { type: ObjectId, ref: 'user' }
 });
 
 module.exports = mongoose.model('tourney', tourneySchema);

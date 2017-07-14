@@ -16,6 +16,7 @@ router.post('/api/tourney', bearerAuth, jsonParser, function(req, res, next) {
   //TODO: Who can make a tourney?
   if(!isRoot(req)) return next(createError(403, 'forbidden'));
 
+  req.body.owner = req.user._id;
   new Tourney(req.body).save()
   .then( tourney => res.status(201).json(tourney))
   .catch(next);
