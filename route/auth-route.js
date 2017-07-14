@@ -23,6 +23,10 @@ router.post('/api/signup', jsonParser, function(req, res, next) {
     return next(createError(400, 'bad request'));
   }
 
+  //Extra security step to prevent any from ever signing up as root.
+  //Though the root account should exist and thus prevent any signups as root.
+  if(req.body.username === 'root') return next(createError(403, 'Forbidden'));
+
   let password = req.body.password;
   delete req.body.password;
 

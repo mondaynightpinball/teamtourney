@@ -11,7 +11,7 @@ const Machine = require('../model/machine.js');
 
 const server = require('../server.js');
 
-const url = `http://localhost:${process.env.PORT}`;
+const url = `http://localhost:${server.PORT}`;
 
 describe('Venue Routes', function() {
   before( done => {

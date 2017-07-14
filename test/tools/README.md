@@ -1,0 +1,1 @@
+These are manual tools to isolate small steps in testing. They are all intended to be run from the command line, and most require command line params in a specific order. I recommend looking at the source before trying to use them.

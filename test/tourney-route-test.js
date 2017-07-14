@@ -43,10 +43,28 @@ describe('Tourney Routes', function() {
           // TODO: What else do tourneys need?
         }).end( (err, res) => {
           expect(res.status).to.equal(201);
+          this.tourney = res.body;
           done();
         });
       });
     }); // root and valid
   }); // POST /api/tourney
+
+  describe('GET /api/tourney/:id', () => {
+    describe('with a valid id', () => {
+      it('should return a 200 with the tourney', done => {
+        request.get(`${url}/api/tourney/${this.tourney._id}`)
+        .end( (err, res) => {
+          debug('TOURNEY:', res.body);
+          expect(res.status).to.equal(200);
+          expect(res.body._id).to.equal(`${this.tourney._id}`);
+          expect(res.body.name).to.equal('Example Tourney');
+          done();
+        });
+      });
+    }); // valid id
+  }); // GET /api/tourney/:id
+
+  
 
 });

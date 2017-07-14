@@ -10,6 +10,7 @@ const ObjectId = Schema.Types.ObjectId;
 
 const tourneySchema = Schema({
   created: { type: Date, default: Date.now },
+  name: { type: String }, // TODO Create semi-random default
   teams: [{ type: ObjectId, ref: 'team' }],
   rounds: [{ type: ObjectId, ref: 'round' }],
   venue: { type: ObjectId, ref: 'venue' }
