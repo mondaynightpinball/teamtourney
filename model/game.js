@@ -9,19 +9,13 @@ const ObjectId = Schema.Types.ObjectId;
 const debug = require('debug')('mnp:game');
 
 const gameSchema = Schema({
-  // userId: { type: ObjectId, required: true }, // All games are created by root for now.
-  created: { type: Date, default: Date.now },
-  // I'm ok leaving the game.type field in the model, but the plan is only to have doubles.
   type: {
     type: String,
     required: true,
     enum: ['singles', 'doubles', 'shared']
   },
-  tourneyId: { type: ObjectId, required: true },
-  round: { type: ObjectId, required: true },
+  matchId: ObjectId,
   machine: { type: ObjectId, ref: 'machine' },
-  //TODO: Bring back venue?
-  // venue: { type: Schema.Types.ObjectId, ref: 'venue', required: true },
   players: [{ type: ObjectId }], // Size based on type
   scores: [{ type: Number }],
   points: [{ type: Number }]
