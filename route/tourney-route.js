@@ -33,4 +33,4 @@ router.get('/api/tourney/:id', function(req, res, next) {
 });
 
 
-function isRoot(req) { return req.user.username === 'root'; }
+function isRoot(req) { return req.user.username === 'root' || req.user.admin; }
