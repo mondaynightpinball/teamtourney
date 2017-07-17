@@ -25,7 +25,8 @@ router.post('/api/tourney', bearerAuth, jsonParser, function(req, res, next) {
 router.get('/api/tourney/:id', function(req, res, next) {
   debug('GET /api/tourney/:id',req.params.id);
 
-  Tourney.findById(req.params.id)
+  // Tourney.findById(req.params.id)
+  Tourney.load(req.params.id)
   .then( tourney => {
     if(!tourney) return next(createError(404, 'not found'));
     res.json(tourney);

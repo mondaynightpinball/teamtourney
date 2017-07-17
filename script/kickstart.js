@@ -51,11 +51,20 @@ const start = module.exports = function() {
   });
 };
 
+let tourneyId;
 mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true })
 .then( () => {
   return start();
 })
 .then( tourney => {
+  tourneyId = tourney._id;
   return tourney.createSchedule();
+})
+.then( () => {
+  return Tourney.load(tourneyId);
+})
+.then( t => {
+  console.log('------------- TOURNEY ----------------');
+  console.log(JSON.stringify(t, null, 2));
 })
 .catch( err => debug(err.message));
