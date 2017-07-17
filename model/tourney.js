@@ -107,8 +107,8 @@ tourneySchema.statics.load = function(id) {
               return Promise.all( matches.map( match => {
                 const m = {
                   roundId: round._id,
-                  away: map[match.away],
-                  home: map[match.home],
+                  away: { _id: match.away, name: map[match.away] },
+                  home: { _id: match.home, name: map[match.home] },
                   games: []
                 };
                 r.matches.push(m);

@@ -22,6 +22,8 @@ router.post('/api/tourney', bearerAuth, jsonParser, function(req, res, next) {
   .catch(next);
 });
 
+// TODO: Do we need a GET /api/tourney?
+
 router.get('/api/tourney/:id', function(req, res, next) {
   debug('GET /api/tourney/:id',req.params.id);
 
@@ -30,6 +32,78 @@ router.get('/api/tourney/:id', function(req, res, next) {
   .then( tourney => {
     if(!tourney) return next(createError(404, 'not found'));
     res.json(tourney);
+  })
+  .catch(next);
+});
+
+router.get('/api/tourney/:id/matches', function(req, res, next) {
+  debug('GET /api/tourney/:id/matches');
+
+  Tourney.load(req.params.id)
+  .then( tourney => {
+    if(tourney.roundNum === 0) {
+      return res.json([]);
+    }
+    const round = tourney.rounds.find( x => x.num === tourney.roundNum);
+    res.json(round.matches);
+  })
+  .catch(next);
+});
+
+router.put('/api/tourney/:id/next-round', function(req, res, next) {
+  debug('PUT /api/tourney/:id/next-round');
+
+  Tourney.findById(req.params.id)
+  .then( tourney => {
+    //TODO Only allow the roundNum to advance if all games are done.
+    tourney.roundNum = req.body.roundNum;
+    return tourney.save();
+  })
+  .then( () => res.send('OK'))
+  .catch(next);
+});
+
+router.get('/api/tourney/:id/standings', function(req, res, next) {
+  debug('GET /api/tourney/:id/standings');
+
+  Tourney.load(req.params.id)
+  .then( tourney => {
+    const names = {};
+    const points = {};
+    tourney.rounds.forEach( round => {
+      round.matches.forEach( match => {
+        const awayId = match.away._id;
+        const homeId = match.home._id;
+        names[homeId] = match.home.name;
+        names[awayId] = match.away.name;
+        if(!points[homeId]) points[homeId] = 0;
+        if(!points[awayId]) points[awayId] = 0;
+        match.games.forEach( game => {
+          console.log(game);
+          if(game.points.length === 4) {
+            points[awayId] += game.points[0] + game.points[2];
+            points[homeId] += game.points[1] + game.points[3];
+          }
+        });
+      });
+    });
+
+    console.log('POINTS:', points);
+
+    const standings = [];
+    Object.keys(names).forEach( id => {
+      standings.push({
+        teamId: id,
+        name: names[id],
+        points: points[id]
+      });
+    });
+    standings.sort( (a,b) => {
+      if(a.points < b.points) return 1;
+      if(a.points > b.points) return -1;
+      return 0;
+    });
+    res.json(standings);
   })
   .catch(next);
 });

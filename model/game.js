@@ -52,8 +52,8 @@ gameSchema.methods.reportScores = function(playerId, scores) {
 
   //TODO: Calculate the points if all the scores are in.
 
-  //TODO: Shouldn't we return save();
-  return Promise.resolve(this);
+  // return Promise.resolve(this);
+  return this.save();
 };
 
 gameSchema.methods.join = function(playerId) {

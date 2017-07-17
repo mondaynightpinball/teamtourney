@@ -31,6 +31,44 @@ router.get('/api/game/:id', bearerAuth, function(req, res, next) {
   .catch( () => next(createError(404, 'not found')));
 });
 
+router.put('/api/game/:id', bearerAuth, jsonParser, function(req, res, next) {
+  debug('PUT /api/game/:id');
+
+  Game.findById(req.params.id)
+  .then( game => {
+    const s = req.body.scores;
+    game.players = req.body.players;
+    game.scores = s;
+
+    //Calculate points
+    //TODO: NOTE this is temporary and only does doubles games.
+    const p = [0,0,0,0];
+    const sum1 = s[0] + s[2];
+    const sum2 = s[1] + s[3];
+
+    if(sum1 > sum2) {
+      p[0] = 0.5;
+      p[2] = 0.5;
+    }
+    else {
+      p[1] = 0.5;
+      p[3] = 0.5;
+    }
+
+    for(let i = 0; i < 4; i++) {
+      if(s[i] > s[(i + 1) % 4]) p[i] += 1;
+      if(s[i] > s[(i + 3) % 4]) p[i] += 1;
+    }
+
+    game.points = p;
+
+    return game.save();
+  })
+  // TODO: then check if we need to up the round num on the tourney
+  .then( game => res.json(game))
+  .catch(next);
+});
+
 // JOIN a game
 router.put('/api/game/:id/join', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT /api/game/:id/join');
@@ -54,7 +92,7 @@ router.put('/api/game/:id/report-scores', bearerAuth, jsonParser, function(req, 
   Game.findById(req.params.id)
   .catch( () => next(createError(404, 'not found')))
   .then( game => game.reportScores(req.user._id, req.body))
-  .then( game => game.save())
+  // .then( game => game.save())
   .then( game => res.json(game))
   .catch( err => next(createError(400, err.message)));
 });
