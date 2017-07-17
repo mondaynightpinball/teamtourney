@@ -33,5 +33,5 @@ router.get('/api/tourney/:id', function(req, res, next) {
   .catch(next);
 });
 
-
+// TODO: It might be better to have an isRoot middleware, and attach something like req.root = true
 function isRoot(req) { return req.user.username === 'root' || req.user.admin; }

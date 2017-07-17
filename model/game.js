@@ -15,10 +15,12 @@ const gameSchema = Schema({
     enum: ['singles', 'doubles', 'shared']
   },
   matchId: ObjectId,
-  machine: { type: ObjectId, ref: 'machine' },
-  players: [{ type: ObjectId }], // Size based on type
-  scores: [{ type: Number }],
-  points: [{ type: Number }]
+  // machine: { type: ObjectId, ref: 'machine' },
+  machine: String,
+  // players: [{ type: ObjectId }], // Size based on type
+  players: [ String ], // Size based on type
+  scores: [ Number ],
+  points: [ Number ]
 });
 
 //TODO: Who is allowed to call this? Add a reportedBy param?
@@ -47,6 +49,8 @@ gameSchema.methods.reportScores = function(playerId, scores) {
 
   //TODO: Only overwrite non-zero values from scores?
   this.scores = scores;
+
+  //TODO: Calculate the points if all the scores are in.
 
   //TODO: Shouldn't we return save();
   return Promise.resolve(this);
