@@ -19,7 +19,7 @@ const tourneySchema = Schema({
   machines: [ String ],
   // teams: [{ type: ObjectId, ref: 'team' }], // Teams have a tourneyId
   // rounds: [{ type: ObjectId, ref: 'round' }], // Rounds have a tourneyId
-  roundNum: Number,
+  roundNum: { type: Number, default: 0 },
   // venue: { type: ObjectId, ref: 'venue' },
   venue: String,
   owner: { type: ObjectId, ref: 'user' }

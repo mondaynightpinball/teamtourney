@@ -22,7 +22,19 @@ router.post('/api/tourney', bearerAuth, jsonParser, function(req, res, next) {
   .catch(next);
 });
 
-// TODO: Do we need a GET /api/tourney?
+router.get('/api/tourney', function(req, res, next) {
+  debug('GET /api/tourney');
+
+  Tourney.find({}).sort('-created')
+  .then( list => {
+    //TODO: NOTE for now I'm just returning the most current.
+    return Tourney.load(list[0]._id);
+  })
+  .then( tourney => {
+    res.json(tourney);
+  })
+  .catch(next);
+});
 
 router.get('/api/tourney/:id', function(req, res, next) {
   debug('GET /api/tourney/:id',req.params.id);
@@ -56,7 +68,8 @@ router.put('/api/tourney/:id/next-round', function(req, res, next) {
   Tourney.findById(req.params.id)
   .then( tourney => {
     //TODO Only allow the roundNum to advance if all games are done.
-    tourney.roundNum = req.body.roundNum;
+    console.log('Current Round:', tourney.roundNum);
+    tourney.roundNum++;
     return tourney.save();
   })
   .then( () => res.send('OK'))

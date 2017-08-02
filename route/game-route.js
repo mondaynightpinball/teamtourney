@@ -23,7 +23,7 @@ router.post('/api/game', bearerAuth, jsonParser, function(req, res, next) {
   .catch(next);
 });
 
-router.get('/api/game/:id', bearerAuth, function(req, res, next) {
+router.get('/api/game/:id', function(req, res, next) {
   debug('GET /api/game/:id', req.params.id); //Q: Is it bad to print id?
 
   Game.findById(req.params.id)
@@ -31,7 +31,8 @@ router.get('/api/game/:id', bearerAuth, function(req, res, next) {
   .catch( () => next(createError(404, 'not found')));
 });
 
-router.put('/api/game/:id', bearerAuth, jsonParser, function(req, res, next) {
+// router.put('/api/game/:id', bearerAuth, jsonParser, function(req, res, next) {
+router.put('/api/game/:id', jsonParser, function(req, res, next) {
   debug('PUT /api/game/:id');
 
   Game.findById(req.params.id)
